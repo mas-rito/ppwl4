@@ -106,6 +106,21 @@ app.get(
   },
 );
 
+app.onAfterHandle(({ response }) => {
+  return {
+    success: true,
+    message: "Data tersedia",
+    data: response,
+  };
+});
+
+app.get("/product", () => {
+  return {
+    id: 1,
+    name: "Laptop",
+  };
+});
+
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
