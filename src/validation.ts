@@ -57,31 +57,54 @@ app.get(
   },
 );
 
-app
-  .get(
-    "/stats",
-    () => {
-      return {
-        success: true,
-        message: "Server OK",
-        data: {
-          total: 100,
-          active: 50,
-        },
-      };
-    },
-    {
-      response: t.Object({
-        success: t.Boolean(),
-        message: t.String(),
-        data: t.Object({
-          total: t.Number(),
-          active: t.Number(),
-        }),
+app.get(
+  "/stats",
+  () => {
+    return {
+      success: true,
+      message: "Server OK",
+      data: {
+        total: 100,
+        active: 50,
+      },
+    };
+  },
+  {
+    response: t.Object({
+      success: t.Boolean(),
+      message: t.String(),
+      data: t.Object({
+        total: t.Number(),
+        active: t.Number(),
       }),
+    }),
+  },
+);
+
+app.get(
+  "/admin",
+  () => {
+    return {
+      success: true,
+      message: "Server OK",
+      body: {
+        stats: 99,
+      },
+    };
+  },
+  {
+    beforeHandle: ({ headers, set }) => {
+      if (!headers.authorization) {
+        set.status = 401;
+        return {
+          success: false,
+          message: "Unauthorized",
+        };
+      }
+      set.status = 200;
     },
-  )
-  .listen(3000);
+  },
+);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
