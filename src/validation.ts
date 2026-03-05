@@ -121,6 +121,35 @@ app.get("/product", () => {
   };
 });
 
+app.post(
+  "/login",
+  (body) => {
+    return {
+      success: true,
+      message: "Login successful",
+      body: body,
+    };
+  },
+  {
+    body: t.Object({
+      email: t.String({ format: "email" }),
+      password: t.String({
+        minLength: 8,
+      }),
+    }),
+  },
+);
+
+app.onError(({ code, error }) => {
+  if (code === "VALIDATION") {
+    return {
+      success: false,
+      message: "Validation error",
+      error: error.message,
+    };
+  }
+});
+
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
